@@ -38,26 +38,52 @@ fun connectScreen(){
     answerGroup.setBounds(45,250,300,300)
     answerGroup.background = Color.BLACK
 
-    val answer1 = JButton("A")
-    answer1.background = Color.RED
-    answer1.setSize(Dimension(75, 75))
-    answer1.font = Font("Serif", Font.BOLD, 50)
+    val answer1JButton = JButton("A")
+    answer1JButton.background = Color.RED
+    answer1JButton.setSize(Dimension(75, 75))
+    answer1JButton.font = Font("Serif", Font.BOLD, 50)
 
-    val answer2 = JButton("B")
-    answer2.background = Color.GREEN
-    answer2.setSize(Dimension(75, 75))
-    answer2.font = Font("Serif", Font.BOLD, 50)
+    val answer2JButton = JButton("B")
+    answer2JButton.background = Color.GREEN
+    answer2JButton.setSize(Dimension(75, 75))
+    answer2JButton.font = Font("Serif", Font.BOLD, 50)
 
-    val answer3 = JButton("C")
-    answer3.background = Color.YELLOW
-    answer3.setSize(Dimension(75, 75))
-    answer3.font = Font("Serif", Font.BOLD, 50)
+    val answer3JButton = JButton("C")
+    answer3JButton.background = Color.YELLOW
+    answer3JButton.setSize(Dimension(75, 75))
+    answer3JButton.font = Font("Serif", Font.BOLD, 50)
 
-    val answer4 = JButton("D")
-    answer4.background = Color.BLUE
-    answer4.setSize(Dimension(75, 75))
-    answer4.font = Font("Serif", Font.BOLD, 50)
+    val answer4JButton = JButton("D")
+    answer4JButton.background = Color.BLUE
+    answer4JButton.setSize(Dimension(75, 75))
+    answer4JButton.font = Font("Serif", Font.BOLD, 50)
 
+    //createRoomPanel
+
+    val roomIdLabel = JLabel("IDROOM",SwingConstants.CENTER)
+    roomIdLabel.setBounds(50,0,300,50)
+    roomIdLabel.font = Font("Serif", Font.BOLD, 25)
+
+    val questionJTextField = JTextField("Question")
+    questionJTextField.setBounds(20,75,350,50)
+
+    val answer1JTextField = JTextField("Answer 1")
+    answer1JTextField.setBounds(20,125,350,50)
+
+    val answer2JTextField = JTextField("Answer 2")
+    answer2JTextField.setBounds(20,175,350,50)
+
+    val answer3JTextField = JTextField("Answer 3")
+    answer3JTextField.setBounds(20,225,350,50)
+
+    val answer4JTextField = JTextField("Answer 4")
+    answer4JTextField.setBounds(20,275,350,50)
+
+    val addQuestionButton = JButton("Add Question")
+    addQuestionButton.setBounds(100, 400,200,50)
+
+    val endCreateRoom = JButton("Zakoncz")
+    endCreateRoom.setBounds(100, 500,200,50)
 
     val frame = JFrame("Hello, Kotlin/Swing")
     frame.layout = null
@@ -90,12 +116,27 @@ fun connectScreen(){
     roomPanel.add(nrQuetionLabel)
     roomPanel.add(questionLabel)
     roomPanel.add(answerGroup)
-    answerGroup.add(answer1)
-    answerGroup.add(answer2)
-    answerGroup.add(answer3)
-    answerGroup.add(answer4)
+    answerGroup.add(answer1JButton)
+    answerGroup.add(answer2JButton)
+    answerGroup.add(answer3JButton)
+    answerGroup.add(answer4JButton)
 
-    frame.setContentPane(connectionPanel)
+    //Create_Room Panel
+    val createRoomPanel = JPanel(null)
+    createRoomPanel.background = Color.YELLOW
+
+    createRoomPanel.add(roomIdLabel)
+    createRoomPanel.add(questionJTextField)
+    createRoomPanel.add(answer1JTextField)
+    createRoomPanel.add(answer2JTextField)
+    createRoomPanel.add(answer3JTextField)
+    createRoomPanel.add(answer4JTextField)
+    createRoomPanel.add(addQuestionButton)
+    createRoomPanel.add(endCreateRoom)
+
+
+
+    frame.setContentPane(createRoomPanel)
 
     connectButton.addActionListener {
         connectToServer(adresTextField.text, portTextField.text)
@@ -112,8 +153,16 @@ fun connectScreen(){
     connectToRoomButton.addActionListener({
         frame.contentPane.remove(hubPanel)
         frame.repaint()
-
         frame.setContentPane(roomPanel)
+        frame.invalidate()
+        frame.validate()
+        frame.repaint()
+    })
+
+    createRoomButton.addActionListener({
+        frame.contentPane.remove(hubPanel)
+        frame.repaint()
+        frame.setContentPane(createRoomPanel)
         frame.invalidate()
         frame.validate()
         frame.repaint()
