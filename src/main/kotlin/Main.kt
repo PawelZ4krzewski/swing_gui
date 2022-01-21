@@ -1,10 +1,8 @@
 import java.awt.*
 import javax.swing.*
-import javax.swing.BorderFactory.createEmptyBorder
 
 val frame = JFrame("Hello, Kotlin/Swing")
 val hubPanel = JPanel(null)
-val connectionPanel = JPanel(null)
 val roomPanel = JPanel(null)
 val createRoomPanel = JPanel(null)
 val startGamePanel = JPanel(null)
@@ -14,12 +12,12 @@ val showQuestionPanel = JPanel(null)
 var isAnswered = false
 
 fun connectToServer(server: String, port: String) {
-    println("Server: " +server +" port: "+port)
+    println("Server: " + server + " port: " + port)
     //TODO connect to the server
 
 }
 
-fun startGUI(){
+fun startGUI() {
 
     frame.layout = null
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
@@ -27,39 +25,6 @@ fun startGUI(){
     frame.setLocationRelativeTo(null)
     frame.setVisible(true)
 }
-
-
-fun connectScreen(){
-    //connectionPanel
-    val adresTextField = JTextField("Adres")
-    adresTextField.setBounds(40, 10, 200, 40)
-    val portTextField = JTextField("Port")
-    portTextField.setBounds(40, 60, 200, 40)
-    val connectButton = JButton("connect")
-    connectButton.setBounds(40, 110, 200, 40)
-
-//    val crd = CardLayout()
-//    val mainPanel = JPanel(crd)
-
-    //Connection Panel
-    connectionPanel.background = Color.RED
-    connectionPanel.add(adresTextField, BorderLayout.CENTER)
-    connectionPanel.add(portTextField, BorderLayout.CENTER)
-    connectionPanel.add(connectButton, BorderLayout.CENTER)
-
-
-    frame.setContentPane(roomPanel)
-
-    connectButton.addActionListener {
-        connectToServer(adresTextField.text, portTextField.text)
-        frame.contentPane.remove(connectionPanel)
-        frame.setContentPane(hubPanel)
-        repaintScreen()
-    }
-
-    repaintScreen()
-}
-
 
 fun hubScreen() {
 
@@ -93,19 +58,22 @@ fun hubScreen() {
 
 }
 
-fun roomScreen(){
+fun roomScreen() {
     //Room panel
     isAnswered = false
-    val nrQuetionLabel = JLabel("Question 1",SwingConstants.CENTER)
-    nrQuetionLabel.setBounds(50,0,300,50)
+    val nrQuetionLabel = JLabel("Question 1", SwingConstants.CENTER)
+    nrQuetionLabel.setBounds(50, 0, 300, 50)
     nrQuetionLabel.font = Font("Serif", Font.BOLD, 25)
 
-    val questionLabel = JLabel("<html>Pytanie na śniadanie XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddd<html>",SwingConstants.CENTER)
-    questionLabel.setBounds(50,40,300,150)
+    val questionLabel = JLabel(
+        "<html>Pytanie na śniadanie XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddd<html>",
+        SwingConstants.CENTER
+    )
+    questionLabel.setBounds(50, 40, 300, 150)
     questionLabel.font = Font("Serif", Font.BOLD, 25)
 
-    val answerGroup = JPanel(GridLayout(2,2,10,10))
-    answerGroup.setBounds(45,250,300,300)
+    val answerGroup = JPanel(GridLayout(2, 2, 10, 10))
+    answerGroup.setBounds(45, 250, 300, 300)
     answerGroup.background = Color.BLACK
 
     val answer1JButton = JButton("A")
@@ -175,32 +143,34 @@ fun roomScreen(){
     }
 }
 
-fun createRoomScreen(){
+fun createRoomScreen() {
 
-    val roomIdLabel = JLabel("IDROOM",SwingConstants.CENTER)
-    roomIdLabel.setBounds(50,0,300,50)
+    val roomIdLabel = JLabel("IDROOM", SwingConstants.CENTER)
+    roomIdLabel.setBounds(50, 0, 300, 50)
     roomIdLabel.font = Font("Serif", Font.BOLD, 25)
 
     val questionJTextField = JTextField("Question")
-    questionJTextField.setBounds(20,75,350,50)
+    questionJTextField.setBounds(20, 75, 350, 50)
+
+    createRoomPanel.addTextField("Question", 20, 75, 350, 50)
 
     val answer1JTextField = JTextField("Answer 1")
-    answer1JTextField.setBounds(20,125,350,50)
+    answer1JTextField.setBounds(20, 125, 350, 50)
 
     val answer2JTextField = JTextField("Answer 2")
-    answer2JTextField.setBounds(20,175,350,50)
+    answer2JTextField.setBounds(20, 175, 350, 50)
 
     val answer3JTextField = JTextField("Answer 3")
-    answer3JTextField.setBounds(20,225,350,50)
+    answer3JTextField.setBounds(20, 225, 350, 50)
 
     val answer4JTextField = JTextField("Answer 4")
-    answer4JTextField.setBounds(20,275,350,50)
+    answer4JTextField.setBounds(20, 275, 350, 50)
 
     val addQuestionButton = JButton("Add Question")
-    addQuestionButton.setBounds(100, 400,200,50)
+    addQuestionButton.setBounds(100, 400, 200, 50)
 
     val endCreateRoom = JButton("Zakoncz")
-    endCreateRoom.setBounds(100, 500,200,50)
+    endCreateRoom.setBounds(100, 500, 200, 50)
 
     createRoomPanel.background = Color.YELLOW
     createRoomPanel.add(roomIdLabel)
@@ -255,7 +225,7 @@ fun correctAnswerScreen() {
 
     val yourAnswerField = JLabel("Twoj odpowiedź jest")
     yourAnswerField.setBounds(100, 100, 400, 40)
-    yourAnswerField.font = Font("Serif",Font.PLAIN, 25)
+    yourAnswerField.font = Font("Serif", Font.PLAIN, 25)
 
     val correctAnswerField = JLabel("PRAWIDŁOWA")
     correctAnswerField.setBounds(50, 150, 400, 40)
@@ -267,35 +237,35 @@ fun correctAnswerScreen() {
     correctAnswerPanel.add(correctAnswerField)
 }
 
-fun showQuestionScreen(question : String, answerA: String, answerB: String, answerC: String, answerD: String){
+fun showQuestionScreen(question: String, answerA: String, answerB: String, answerC: String, answerD: String) {
 //    frame.contentPane.removeAll()
 
-    val roomIdSQLabel = JLabel("IDROOM",SwingConstants.CENTER)
-    roomIdSQLabel.setBounds(50,0,300,50)
+    val roomIdSQLabel = JLabel("IDROOM", SwingConstants.CENTER)
+    roomIdSQLabel.setBounds(50, 0, 300, 50)
     roomIdSQLabel.font = Font("Serif", Font.BOLD, 25)
 
-    val questionShowJTextField = JLabel("Question: "+ question)
-    questionShowJTextField.setBounds(20,75,350,50)
+    val questionShowJTextField = JLabel("Question: " + question)
+    questionShowJTextField.setBounds(20, 75, 350, 50)
     questionShowJTextField.font = Font("Serif", Font.BOLD, 25)
 
-    val answer1ShowJTextField = JLabel("A: "+answerA)
-    answer1ShowJTextField.setBounds(20,125,350,50)
+    val answer1ShowJTextField = JLabel("A: " + answerA)
+    answer1ShowJTextField.setBounds(20, 125, 350, 50)
     answer1ShowJTextField.font = Font("Serif", Font.BOLD, 20)
 
-    val answer2ShowJTextField = JLabel("B: "+answerB)
-    answer2ShowJTextField.setBounds(20,175,350,50)
+    val answer2ShowJTextField = JLabel("B: " + answerB)
+    answer2ShowJTextField.setBounds(20, 175, 350, 50)
     answer2ShowJTextField.font = Font("Serif", Font.BOLD, 20)
 
-    val answer3ShowJTextField = JLabel("C: "+answerC)
-    answer3ShowJTextField.setBounds(20,225,350,50)
+    val answer3ShowJTextField = JLabel("C: " + answerC)
+    answer3ShowJTextField.setBounds(20, 225, 350, 50)
     answer3ShowJTextField.font = Font("Serif", Font.BOLD, 20)
 
-    val answer4ShowJTextField = JLabel("D: "+answerD)
-    answer4ShowJTextField.setBounds(20,275,350,50)
+    val answer4ShowJTextField = JLabel("D: " + answerD)
+    answer4ShowJTextField.setBounds(20, 275, 350, 50)
     answer4ShowJTextField.font = Font("Serif", Font.BOLD, 20)
 
     val timerJTextField = JLabel("30")
-    timerJTextField.setBounds(175,400,350,50)
+    timerJTextField.setBounds(175, 400, 350, 50)
     timerJTextField.font = Font("Serif", Font.BOLD, 40)
 
     showQuestionPanel.add(roomIdSQLabel)
@@ -316,24 +286,28 @@ fun repaintScreen() {
 fun main(args: Array<String>) {
 
     startGUI()
-    connectScreen()
-    hubScreen()
-    roomScreen()
-    createRoomScreen()
-    startGameScreen()
-    correctAnswerScreen()
-    for (i in 1..10){
-        frame.contentPane.removeAll()
-        showQuestionScreen("Question $i", "Answer A $i", "Answer B $i", "Answer C $i", "Answer D $i")
-        frame.setContentPane(showQuestionPanel)
-        repaintScreen()
-        Thread.sleep(2000)
-        frame.contentPane.removeAll()
-        correctAnswerScreen()
-        frame.setContentPane(correctAnswerPanel)
-        repaintScreen()
-        Thread.sleep(2000)
+    frame.contentPane = ConnectScreen {
+        navigateTo(createRoomPanel)
+//        navigateTo(hubPanel)
     }
+    repaintScreen()
+    hubScreen()
+//    roomScreen()
+    createRoomScreen()
+//    startGameScreen()
+//    correctAnswerScreen()
+//    for (i in 1..10){
+//        frame.contentPane.removeAll()
+//        showQuestionScreen("Question $i", "Answer A $i", "Answer B $i", "Answer C $i", "Answer D $i")
+//        frame.setContentPane(showQuestionPanel)
+//        repaintScreen()
+//        Thread.sleep(2000)
+//        frame.contentPane.removeAll()
+//        correctAnswerScreen()
+//        frame.setContentPane(correctAnswerPanel)
+//        repaintScreen()
+//        Thread.sleep(2000)
+//    }
 
 
     //connectionPanel
@@ -356,7 +330,10 @@ fun main(args: Array<String>) {
 //    frame.repaint()
 
 
+}
 
-
-
+private fun navigateTo(panel: JPanel) {
+    frame.contentPane.removeAll()
+    frame.contentPane = panel
+    repaintScreen()
 }
