@@ -9,7 +9,9 @@ val roomPanel = JPanel(null)
 val createRoomPanel = JPanel(null)
 val startGamePanel = JPanel(null)
 val correctAnswerPanel = JPanel(null)
+val showQuestionPanel = JPanel(null)
 
+var isAnswered = false
 
 fun connectToServer(server: String, port: String) {
     println("Server: " +server +" port: "+port)
@@ -46,22 +48,16 @@ fun connectScreen(){
     connectionPanel.add(connectButton, BorderLayout.CENTER)
 
 
-    frame.setContentPane(startGamePanel)
+    frame.setContentPane(roomPanel)
 
     connectButton.addActionListener {
         connectToServer(adresTextField.text, portTextField.text)
         frame.contentPane.remove(connectionPanel)
-        frame.repaint()
         frame.setContentPane(hubPanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
+        repaintScreen()
     }
 
-    frame.invalidate()
-    frame.validate()
-    frame.repaint()
-
+    repaintScreen()
 }
 
 
@@ -83,27 +79,23 @@ fun hubScreen() {
 
 
     createRoomButton.addActionListener({
-        frame.contentPane.remove(hubPanel)
+        frame.contentPane.removeAll()
         frame.repaint()
         frame.setContentPane(createRoomPanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
+        repaintScreen()
     })
 
     connectToRoomButton.addActionListener({
-        frame.contentPane.remove(hubPanel)
-        frame.repaint()
+        frame.contentPane.removeAll()
         frame.setContentPane(roomPanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
+        repaintScreen()
     })
 
 }
 
 fun roomScreen(){
     //Room panel
+    isAnswered = false
     val nrQuetionLabel = JLabel("Question 1",SwingConstants.CENTER)
     nrQuetionLabel.setBounds(50,0,300,50)
     nrQuetionLabel.font = Font("Serif", Font.BOLD, 25)
@@ -144,6 +136,43 @@ fun roomScreen(){
     answerGroup.add(answer2JButton)
     answerGroup.add(answer3JButton)
     answerGroup.add(answer4JButton)
+
+    answer1JButton.addActionListener {
+        if (!isAnswered) {
+            answer2JButton.background = Color.GRAY
+            answer3JButton.background = Color.GRAY
+            answer4JButton.background = Color.GRAY
+            isAnswered = true
+            repaintScreen()
+        }
+    }
+    answer2JButton.addActionListener {
+        if (!isAnswered) {
+            answer1JButton.background = Color.GRAY
+            answer3JButton.background = Color.GRAY
+            answer4JButton.background = Color.GRAY
+            isAnswered = true
+            repaintScreen()
+        }
+    }
+    answer3JButton.addActionListener {
+        if (!isAnswered) {
+            answer2JButton.background = Color.GRAY
+            answer1JButton.background = Color.GRAY
+            answer4JButton.background = Color.GRAY
+            isAnswered = true
+            repaintScreen()
+        }
+    }
+    answer4JButton.addActionListener {
+        if (!isAnswered) {
+            answer2JButton.background = Color.GRAY
+            answer3JButton.background = Color.GRAY
+            answer1JButton.background = Color.GRAY
+            isAnswered = true
+            repaintScreen()
+        }
+    }
 }
 
 fun createRoomScreen(){
@@ -188,12 +217,9 @@ fun createRoomScreen(){
     })
 
     endCreateRoom.addActionListener({
-        frame.contentPane.remove(createRoomPanel)
-        frame.repaint()
+        frame.contentPane.removeAll()
         frame.setContentPane(startGamePanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
+        repaintScreen()
     })
 
 }
@@ -214,12 +240,10 @@ fun startGameScreen() {
 
 
     startGameButton.addActionListener({
-        frame.contentPane.remove(startGamePanel)
+        frame.contentPane.removeAll()
         frame.repaint()
-//        frame.setContentPane(startGamePanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
+        frame.setContentPane(showQuestionPanel)
+        repaintScreen()
     })
 
 }
@@ -243,6 +267,51 @@ fun correctAnswerScreen() {
     correctAnswerPanel.add(correctAnswerField)
 }
 
+fun showQuestionScreen(question : String, answerA: String, answerB: String, answerC: String, answerD: String){
+//    frame.contentPane.removeAll()
+
+    val roomIdSQLabel = JLabel("IDROOM",SwingConstants.CENTER)
+    roomIdSQLabel.setBounds(50,0,300,50)
+    roomIdSQLabel.font = Font("Serif", Font.BOLD, 25)
+
+    val questionShowJTextField = JLabel("Question: "+ question)
+    questionShowJTextField.setBounds(20,75,350,50)
+    questionShowJTextField.font = Font("Serif", Font.BOLD, 25)
+
+    val answer1ShowJTextField = JLabel("A: "+answerA)
+    answer1ShowJTextField.setBounds(20,125,350,50)
+    answer1ShowJTextField.font = Font("Serif", Font.BOLD, 20)
+
+    val answer2ShowJTextField = JLabel("B: "+answerB)
+    answer2ShowJTextField.setBounds(20,175,350,50)
+    answer2ShowJTextField.font = Font("Serif", Font.BOLD, 20)
+
+    val answer3ShowJTextField = JLabel("C: "+answerC)
+    answer3ShowJTextField.setBounds(20,225,350,50)
+    answer3ShowJTextField.font = Font("Serif", Font.BOLD, 20)
+
+    val answer4ShowJTextField = JLabel("D: "+answerD)
+    answer4ShowJTextField.setBounds(20,275,350,50)
+    answer4ShowJTextField.font = Font("Serif", Font.BOLD, 20)
+
+    val timerJTextField = JLabel("30")
+    timerJTextField.setBounds(175,400,350,50)
+    timerJTextField.font = Font("Serif", Font.BOLD, 40)
+
+    showQuestionPanel.add(roomIdSQLabel)
+    showQuestionPanel.add(questionShowJTextField)
+    showQuestionPanel.add(answer1ShowJTextField)
+    showQuestionPanel.add(answer2ShowJTextField)
+    showQuestionPanel.add(answer3ShowJTextField)
+    showQuestionPanel.add(answer4ShowJTextField)
+    showQuestionPanel.add(timerJTextField)
+}
+
+fun repaintScreen() {
+    frame.invalidate()
+    frame.validate()
+    frame.repaint()
+}
 
 fun main(args: Array<String>) {
 
@@ -253,6 +322,19 @@ fun main(args: Array<String>) {
     createRoomScreen()
     startGameScreen()
     correctAnswerScreen()
+    for (i in 1..10){
+        frame.contentPane.removeAll()
+        showQuestionScreen("Question $i", "Answer A $i", "Answer B $i", "Answer C $i", "Answer D $i")
+        frame.setContentPane(showQuestionPanel)
+        repaintScreen()
+        Thread.sleep(2000)
+        frame.contentPane.removeAll()
+        correctAnswerScreen()
+        frame.setContentPane(correctAnswerPanel)
+        repaintScreen()
+        Thread.sleep(2000)
+    }
+
 
     //connectionPanel
 //    val adresTextField = JTextField("Adres")
