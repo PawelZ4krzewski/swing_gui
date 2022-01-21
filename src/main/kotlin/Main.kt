@@ -2,11 +2,30 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.BorderFactory.createEmptyBorder
 
+val frame = JFrame("Hello, Kotlin/Swing")
+val hubPanel = JPanel(null)
+val connectionPanel = JPanel(null)
+val roomPanel = JPanel(null)
+val createRoomPanel = JPanel(null)
+val startGamePanel = JPanel(null)
+val correctAnswerPanel = JPanel(null)
+
+
 fun connectToServer(server: String, port: String) {
     println("Server: " +server +" port: "+port)
     //TODO connect to the server
 
 }
+
+fun startGUI(){
+
+    frame.layout = null
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    frame.setSize(Dimension(400, 600))
+    frame.setLocationRelativeTo(null)
+    frame.setVisible(true)
+}
+
 
 fun connectScreen(){
     //connectionPanel
@@ -17,6 +36,37 @@ fun connectScreen(){
     val connectButton = JButton("connect")
     connectButton.setBounds(40, 110, 200, 40)
 
+//    val crd = CardLayout()
+//    val mainPanel = JPanel(crd)
+
+    //Connection Panel
+    connectionPanel.background = Color.RED
+    connectionPanel.add(adresTextField, BorderLayout.CENTER)
+    connectionPanel.add(portTextField, BorderLayout.CENTER)
+    connectionPanel.add(connectButton, BorderLayout.CENTER)
+
+
+    frame.setContentPane(startGamePanel)
+
+    connectButton.addActionListener {
+        connectToServer(adresTextField.text, portTextField.text)
+        frame.contentPane.remove(connectionPanel)
+        frame.repaint()
+        frame.setContentPane(hubPanel)
+        frame.invalidate()
+        frame.validate()
+        frame.repaint()
+    }
+
+    frame.invalidate()
+    frame.validate()
+    frame.repaint()
+
+}
+
+
+fun hubScreen() {
+
     //hubPanel
     val roomIdTextField = JTextField("Room Id")
     roomIdTextField.setBounds(40, 10, 200, 40)
@@ -25,6 +75,34 @@ fun connectScreen(){
     val createRoomButton = JButton("Create Room")
     createRoomButton.setBounds(40, 110, 200, 40)
 
+    //Hub Panel
+    hubPanel.background = Color.BLUE
+    hubPanel.add(roomIdTextField)
+    hubPanel.add(connectToRoomButton)
+    hubPanel.add(createRoomButton)
+
+
+    createRoomButton.addActionListener({
+        frame.contentPane.remove(hubPanel)
+        frame.repaint()
+        frame.setContentPane(createRoomPanel)
+        frame.invalidate()
+        frame.validate()
+        frame.repaint()
+    })
+
+    connectToRoomButton.addActionListener({
+        frame.contentPane.remove(hubPanel)
+        frame.repaint()
+        frame.setContentPane(roomPanel)
+        frame.invalidate()
+        frame.validate()
+        frame.repaint()
+    })
+
+}
+
+fun roomScreen(){
     //Room panel
     val nrQuetionLabel = JLabel("Question 1",SwingConstants.CENTER)
     nrQuetionLabel.setBounds(50,0,300,50)
@@ -58,7 +136,17 @@ fun connectScreen(){
     answer4JButton.setSize(Dimension(75, 75))
     answer4JButton.font = Font("Serif", Font.BOLD, 50)
 
-    //createRoomPanel
+    roomPanel.background = Color.MAGENTA
+    roomPanel.add(nrQuetionLabel)
+    roomPanel.add(questionLabel)
+    roomPanel.add(answerGroup)
+    answerGroup.add(answer1JButton)
+    answerGroup.add(answer2JButton)
+    answerGroup.add(answer3JButton)
+    answerGroup.add(answer4JButton)
+}
+
+fun createRoomScreen(){
 
     val roomIdLabel = JLabel("IDROOM",SwingConstants.CENTER)
     roomIdLabel.setBounds(50,0,300,50)
@@ -85,46 +173,7 @@ fun connectScreen(){
     val endCreateRoom = JButton("Zakoncz")
     endCreateRoom.setBounds(100, 500,200,50)
 
-    val frame = JFrame("Hello, Kotlin/Swing")
-    frame.layout = null
-
-    val crd = CardLayout()
-    val mainPanel = JPanel(crd)
-
-
-
-    //Connection Panel
-    val connectionPanel = JPanel(null)
-    connectionPanel.background = Color.RED
-    connectionPanel.add(adresTextField, BorderLayout.CENTER)
-    connectionPanel.add(portTextField, BorderLayout.CENTER)
-    connectionPanel.add(connectButton, BorderLayout.CENTER)
-
-
-
-    //Hub Panel
-    val hubPanel = JPanel(null)
-    hubPanel.background = Color.BLUE
-    hubPanel.add(roomIdTextField)
-    hubPanel.add(connectToRoomButton)
-    hubPanel.add(createRoomButton)
-
-    //Room Panel
-    val roomPanel = JPanel(null)
-    roomPanel.background = Color.MAGENTA
-
-    roomPanel.add(nrQuetionLabel)
-    roomPanel.add(questionLabel)
-    roomPanel.add(answerGroup)
-    answerGroup.add(answer1JButton)
-    answerGroup.add(answer2JButton)
-    answerGroup.add(answer3JButton)
-    answerGroup.add(answer4JButton)
-
-    //Create_Room Panel
-    val createRoomPanel = JPanel(null)
     createRoomPanel.background = Color.YELLOW
-
     createRoomPanel.add(roomIdLabel)
     createRoomPanel.add(questionJTextField)
     createRoomPanel.add(answer1JTextField)
@@ -134,51 +183,97 @@ fun connectScreen(){
     createRoomPanel.add(addQuestionButton)
     createRoomPanel.add(endCreateRoom)
 
+    addQuestionButton.addActionListener({
+        println("Dodaje pytanko")
+    })
 
-
-    frame.setContentPane(createRoomPanel)
-
-    connectButton.addActionListener {
-        connectToServer(adresTextField.text, portTextField.text)
-        frame.contentPane.remove(connectionPanel)
+    endCreateRoom.addActionListener({
+        frame.contentPane.remove(createRoomPanel)
         frame.repaint()
-        frame.setContentPane(hubPanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
-
-//        crd.next(mainPanel)
-    }
-
-    connectToRoomButton.addActionListener({
-        frame.contentPane.remove(hubPanel)
-        frame.repaint()
-        frame.setContentPane(roomPanel)
+        frame.setContentPane(startGamePanel)
         frame.invalidate()
         frame.validate()
         frame.repaint()
     })
 
-    createRoomButton.addActionListener({
-        frame.contentPane.remove(hubPanel)
-        frame.repaint()
-        frame.setContentPane(createRoomPanel)
-        frame.invalidate()
-        frame.validate()
-        frame.repaint()
-    })
-
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-    frame.setSize(Dimension(400, 600))
-    frame.setLocationRelativeTo(null)
-
-
-    frame.setVisible(true)
 }
+
+
+fun startGameScreen() {
+
+    //startGamePanel
+    val roomIdTextField = JLabel("Room Id")
+    roomIdTextField.setBounds(200, 10, 200, 40)
+    val startGameButton = JButton("START")
+    startGameButton.setBounds(100, 110, 200, 40)
+
+    //Hub Panel
+    startGamePanel.background = Color.PINK
+    startGamePanel.add(roomIdTextField)
+    startGamePanel.add(startGameButton)
+
+
+    startGameButton.addActionListener({
+        frame.contentPane.remove(startGamePanel)
+        frame.repaint()
+//        frame.setContentPane(startGamePanel)
+        frame.invalidate()
+        frame.validate()
+        frame.repaint()
+    })
+
+}
+
+fun correctAnswerScreen() {
+
+    val roomIdText1Field = JLabel("Room Id")
+    roomIdText1Field.setBounds(200, 10, 200, 40)
+
+    val yourAnswerField = JLabel("Twoj odpowiedź jest")
+    yourAnswerField.setBounds(100, 100, 400, 40)
+    yourAnswerField.font = Font("Serif",Font.PLAIN, 25)
+
+    val correctAnswerField = JLabel("PRAWIDŁOWA")
+    correctAnswerField.setBounds(50, 150, 400, 40)
+    correctAnswerField.font = Font("Serif", Font.BOLD, 40)
+
+    correctAnswerPanel.background = Color.PINK
+    correctAnswerPanel.add(roomIdText1Field)
+    correctAnswerPanel.add(yourAnswerField)
+    correctAnswerPanel.add(correctAnswerField)
+}
+
 
 fun main(args: Array<String>) {
 
+    startGUI()
     connectScreen()
+    hubScreen()
+    roomScreen()
+    createRoomScreen()
+    startGameScreen()
+    correctAnswerScreen()
+
+    //connectionPanel
+//    val adresTextField = JTextField("Adres")
+//    adresTextField.setBounds(40, 10, 200, 40)
+//    val portTextField = JTextField("Port")
+//    portTextField.setBounds(40, 60, 200, 40)
+//    val connectButton = JButton("connect")
+//    connectButton.setBounds(40, 110, 200, 40)
+
+//    connectionPanel.background = Color.RED
+//    connectionPanel.add(adresTextField, BorderLayout.CENTER)
+//    connectionPanel.add(portTextField, BorderLayout.CENTER)
+//    connectionPanel.add(connectButton, BorderLayout.CENTER)
+//
+//    frame.setContentPane(connectionPanel)
+//
+//    frame.invalidate()
+//    frame.validate()
+//    frame.repaint()
+
+
 
 
 
