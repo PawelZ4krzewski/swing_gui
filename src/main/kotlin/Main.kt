@@ -1,5 +1,6 @@
 import java.awt.*
 import javax.swing.*
+import javax.swing.BorderFactory.createEmptyBorder
 
 val frame = JFrame("Hello, Kotlin/Swing")
 val hubPanel = JPanel(null)
@@ -152,8 +153,6 @@ fun createRoomScreen() {
     val questionJTextField = JTextField("Question")
     questionJTextField.setBounds(20, 75, 350, 50)
 
-    createRoomPanel.addTextField("Question", 20, 75, 350, 50)
-
     val answer1JTextField = JTextField("Answer 1")
     answer1JTextField.setBounds(20, 125, 350, 50)
 
@@ -287,8 +286,8 @@ fun main(args: Array<String>) {
 
     startGUI()
     frame.contentPane = ConnectScreen {
-        navigateTo(createRoomPanel)
-//        navigateTo(hubPanel)
+//        navigateTo(createRoomPanel)
+        navigateTo(hubPanel)
     }
     repaintScreen()
     hubScreen()
