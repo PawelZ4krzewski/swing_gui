@@ -26,7 +26,7 @@ class HubScreen(frame: JFrame) : JPanel() {
 
 
         createRoomButton.addActionListener {
-//            frame.navigateTo(CreateRoomScreen)
+            frame.navigateTo(CreateRoomScreen(frame))
         }
 
         connectToRoomButton.addActionListener {

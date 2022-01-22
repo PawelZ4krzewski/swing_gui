@@ -60,7 +60,7 @@ class ConnectScreen(frame: JFrame) : JPanel() {
                 print(it)
                 when (it) {
                     is Message.Connected -> {
-                        frame.navigateTo(HubScreen(frame, {}, {}))
+                        frame.navigateTo(HubScreen(frame))
                         coroutineScope.cancel()
                     }
                     is Message.Error -> {

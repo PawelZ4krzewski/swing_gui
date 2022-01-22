@@ -1,10 +1,17 @@
 package screens
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import navigateTo
+import service.Message
 import java.awt.Color
 import java.awt.Font
 import javax.swing.*
 
-class CreateRoomScreen(onNavigate: () -> Unit) : JPanel() {
+class CreateRoomScreen(frame: JFrame) : JPanel() {
+    val questions = mutableListOf<Question>()
 
     init {
         val roomIdLabel = JLabel("IDROOM", SwingConstants.CENTER)
@@ -43,12 +50,39 @@ class CreateRoomScreen(onNavigate: () -> Unit) : JPanel() {
         add(addQuestionButton)
         add(endCreateRoom)
 
-        addQuestionButton.addActionListener({
-            println("Dodaje pytanko")
-        })
+        addQuestionButton.addActionListener {
+            questions.add(
+                Question(
+                    questionJTextField.text,
+                    listOf(answer1JTextField, answer2JTextField, answer3JTextField, answer4JTextField).map { it.text },
+                )
+            )
+        }
 
-        endCreateRoom.addActionListener({
-           onNavigate
-        })
+        endCreateRoom.addActionListener {
+            service.service.createRoom("PAWEL CZEMU NIE ZROBIELS TEXT FIELDA NA TO")
+            questions.forEach {
+                service.service.addQuestion(it.question, it.answers[0], it.answers[1], it.answers[2], it.answers[3])
+            }
+        }
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        val job = coroutineScope.launch {
+            service.service.messages.collect {
+                print(it)
+                when (it) {
+                    is Message.Created -> {
+                        frame.navigateTo(HubScreen(frame))
+                        coroutineScope.cancel()
+                    }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                        )
+                    }
+                }
+            }
+        }
     }
 }
