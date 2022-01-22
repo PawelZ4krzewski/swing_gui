@@ -1,11 +1,15 @@
 package screens
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import navigateTo
+import service.Message
 import java.awt.Color
-import javax.swing.JButton
-import javax.swing.JLabel
-import javax.swing.JPanel
+import javax.swing.*
 
-class StartGameScreen(onNavigate: () -> Unit): JPanel() {
+class StartGameScreen(frame: JFrame): JPanel() {
     init{
 
         //startGamePanel
@@ -22,7 +26,38 @@ class StartGameScreen(onNavigate: () -> Unit): JPanel() {
 
 
         startGameButton.addActionListener {
-            onNavigate()
+            service.service.startGame()
+        }
+
+        val answers = mutableListOf<String>()
+        var question = ""
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            service.service.messages.collect {
+                println("Start game screen $it")
+                when (it) {
+                    is Message.Question -> {
+                        question = it.question
+                        if (question.isNotEmpty() && answers.size == 4) {
+                            frame.navigateTo(ShowQuestionScreen(frame, question, answers))
+                            coroutineScope.cancel()
+                        }
+                    }
+                    is Message.Answer -> {
+                        answers.add(it.answer)
+                        if (question.isNotEmpty() && answers.size == 4) {
+                            frame.navigateTo(ShowQuestionScreen(frame, question, answers))
+                            coroutineScope.cancel()
+                        }
+                    }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                        )
+                    }
+                }
+            }
         }
     }
 }

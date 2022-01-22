@@ -14,9 +14,9 @@ import javax.swing.*
 class ConnectScreen(frame: JFrame) : JPanel() {
     init {
         //connectionPanel
-        val adresTextField = JTextField("Adres")
+        val adresTextField = JTextField("0.0.0.0")
         adresTextField.setBounds(40, 10, 200, 40)
-        val portTextField = JTextField("Port")
+        val portTextField = JTextField("1313")
         portTextField.addKeyListener(object : KeyAdapter() {
             override fun keyTyped(e: KeyEvent) {
                 val c = e.keyChar
@@ -57,7 +57,6 @@ class ConnectScreen(frame: JFrame) : JPanel() {
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         val job = coroutineScope.launch {
             service.service.messages.collect {
-                print(it)
                 when (it) {
                     is Message.Connected -> {
                         frame.navigateTo(HubScreen(frame))

@@ -1,14 +1,16 @@
 package screens
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import navigateTo
+import service.Message
 import java.awt.Color
-import javax.swing.JButton
-import javax.swing.JFrame
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 
 class HubScreen(frame: JFrame) : JPanel() {
-    init{
+    init {
 
         val roomIdTextField = JTextField("Room Id")
         roomIdTextField.setBounds(40, 10, 200, 40)
@@ -30,7 +32,25 @@ class HubScreen(frame: JFrame) : JPanel() {
         }
 
         connectToRoomButton.addActionListener {
+            service.service.joinRoom(roomIdTextField.text, "NICK")
         }
 
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            service.service.messages.collect {
+                println("Start game screen $it")
+                when (it) {
+                    is Message.Joined -> {
+                        frame.navigateTo(WaitGameScreen(frame))
+                    }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                        )
+                    }
+                }
+            }
+        }
     }
 }

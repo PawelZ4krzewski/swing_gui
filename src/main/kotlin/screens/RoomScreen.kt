@@ -1,29 +1,26 @@
 package screens
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import navigateTo
 import repaintScreen
+import service.Message
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.GridLayout
-import javax.swing.JButton
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.SwingConstants
+import javax.swing.*
 
-class RoomScreen(onNavigate: () -> Unit) : JPanel() {
+class RoomScreen(frame: JFrame, id: Int) : JPanel() {
     var isAnswered = false
 
     init{
-        val nrQuetionLabel = JLabel("Question 1", SwingConstants.CENTER)
+        val nrQuetionLabel = JLabel("Question $id", SwingConstants.CENTER)
         nrQuetionLabel.setBounds(50, 0, 300, 50)
         nrQuetionLabel.font = Font("Serif", Font.BOLD, 25)
 
-        val questionLabel = JLabel(
-            "<html>Pytanie na śniadanie XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddd<html>",
-            SwingConstants.CENTER
-        )
-        questionLabel.setBounds(50, 40, 300, 150)
-        questionLabel.font = Font("Serif", Font.BOLD, 25)
 
         val answerGroup = JPanel(GridLayout(2, 2, 10, 10))
         answerGroup.setBounds(45, 250, 300, 300)
@@ -52,7 +49,6 @@ class RoomScreen(onNavigate: () -> Unit) : JPanel() {
         layout = null
         background = Color.MAGENTA
         add(nrQuetionLabel)
-        add(questionLabel)
         add(answerGroup)
         answerGroup.add(answer1JButton)
         answerGroup.add(answer2JButton)
@@ -65,6 +61,7 @@ class RoomScreen(onNavigate: () -> Unit) : JPanel() {
                 answer3JButton.background = Color.GRAY
                 answer4JButton.background = Color.GRAY
                 isAnswered = true
+                service.service.sendAnswer(id, 0)
                 repaintScreen()
             }
         }
@@ -74,6 +71,7 @@ class RoomScreen(onNavigate: () -> Unit) : JPanel() {
                 answer3JButton.background = Color.GRAY
                 answer4JButton.background = Color.GRAY
                 isAnswered = true
+                service.service.sendAnswer(id, 1)
                 repaintScreen()
             }
         }
@@ -83,6 +81,7 @@ class RoomScreen(onNavigate: () -> Unit) : JPanel() {
                 answer1JButton.background = Color.GRAY
                 answer4JButton.background = Color.GRAY
                 isAnswered = true
+                service.service.sendAnswer(id, 2)
                 repaintScreen()
             }
         }
@@ -92,7 +91,28 @@ class RoomScreen(onNavigate: () -> Unit) : JPanel() {
                 answer3JButton.background = Color.GRAY
                 answer1JButton.background = Color.GRAY
                 isAnswered = true
+                service.service.sendAnswer(id, 3)
                 repaintScreen()
+            }
+        }
+
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            service.service.messages.collect {
+                println("Room screen $it")
+                when (it) {
+                    is Message.Question -> {
+                        frame.navigateTo(RoomScreen(frame, id + 1))
+                        coroutineScope.cancel()
+                    }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                        )
+                    }
+                }
             }
         }
     }

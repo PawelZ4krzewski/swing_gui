@@ -5,5 +5,10 @@ import java.lang.Exception
 sealed class Message {
     data class Error(val exception: Exception, val message: String): Message()
     object Connected : Message()
+    object Started : Message()
+    object Joined : Message()
     data class Created(val hash: String) : Message()
+    data class Question(val question: String) : Message()
+    data class Answer(val answer: String, val id: Int) : Message()
+    data class CorrectAnswer(val id: Int) : Message()
 }
