@@ -1,5 +1,6 @@
 import java.awt.*
 import javax.swing.*
+import javax.swing.BorderFactory.createEmptyBorder
 
 val frame = JFrame("Hello, Kotlin/Swing")
 //val hubPanel = JPanel(null)
@@ -23,7 +24,6 @@ fun startGUI() {
     frame.setLocationRelativeTo(null)
     frame.setVisible(true)
 }
-
 
 fun repaintScreen() {
     frame.invalidate()

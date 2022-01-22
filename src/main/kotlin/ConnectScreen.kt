@@ -15,6 +15,7 @@ class ConnectScreen(onNavigate: () -> Unit) : JPanel() {
         connectButton.setBounds(40, 110, 200, 40)
 
         //Connection Panel
+        layout = null
         background = Color.RED
         add(adresTextField, BorderLayout.CENTER)
         add(portTextField, BorderLayout.CENTER)
