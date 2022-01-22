@@ -16,7 +16,7 @@ import javax.swing.*
 class RoomScreen(frame: JFrame, id: Int) : JPanel() {
     var isAnswered = false
 
-    init{
+    init {
         val nrQuetionLabel = JLabel("Question $id", SwingConstants.CENTER)
         nrQuetionLabel.setBounds(50, 0, 300, 50)
         nrQuetionLabel.font = Font("Serif", Font.BOLD, 25)
@@ -27,27 +27,31 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
         answerGroup.background = Color.BLACK
 
         val answer1JButton = JButton("A")
+        answer1JButton.isOpaque = true
         answer1JButton.background = Color.RED
         answer1JButton.setSize(Dimension(75, 75))
         answer1JButton.font = Font("Serif", Font.BOLD, 50)
 
         val answer2JButton = JButton("B")
-        answer2JButton.background = Color.GREEN
+        answer2JButton.isOpaque = true
+        answer2JButton.background = Color.PINK
         answer2JButton.setSize(Dimension(75, 75))
         answer2JButton.font = Font("Serif", Font.BOLD, 50)
 
         val answer3JButton = JButton("C")
-        answer3JButton.background = Color.YELLOW
+        answer3JButton.isOpaque = true
+        answer3JButton.background = Color.orange
         answer3JButton.setSize(Dimension(75, 75))
         answer3JButton.font = Font("Serif", Font.BOLD, 50)
 
         val answer4JButton = JButton("D")
+        answer4JButton.isOpaque = true
         answer4JButton.background = Color.BLUE
         answer4JButton.setSize(Dimension(75, 75))
         answer4JButton.font = Font("Serif", Font.BOLD, 50)
 
         layout = null
-        background = Color.MAGENTA
+        background = Color.WHITE
         add(nrQuetionLabel)
         add(answerGroup)
         answerGroup.add(answer1JButton)
@@ -55,47 +59,19 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
         answerGroup.add(answer3JButton)
         answerGroup.add(answer4JButton)
 
-        answer1JButton.addActionListener {
-            if (!isAnswered) {
-                answer2JButton.background = Color.GRAY
-                answer3JButton.background = Color.GRAY
-                answer4JButton.background = Color.GRAY
-                isAnswered = true
-                service.service.sendAnswer(id, 0)
-                repaintScreen()
+        val buttons = listOf(answer1JButton, answer2JButton, answer3JButton, answer4JButton)
+        buttons.forEachIndexed { index, button ->
+            button.addActionListener {
+                if (!isAnswered) {
+                    buttons.filterNot { it == button }.forEach {
+                        it.background = Color.GRAY
+                    }
+                    isAnswered = true
+                    service.service.sendAnswer(id, index)
+                    repaintScreen()
+                }
             }
         }
-        answer2JButton.addActionListener {
-            if (!isAnswered) {
-                answer1JButton.background = Color.GRAY
-                answer3JButton.background = Color.GRAY
-                answer4JButton.background = Color.GRAY
-                isAnswered = true
-                service.service.sendAnswer(id, 1)
-                repaintScreen()
-            }
-        }
-        answer3JButton.addActionListener {
-            if (!isAnswered) {
-                answer2JButton.background = Color.GRAY
-                answer1JButton.background = Color.GRAY
-                answer4JButton.background = Color.GRAY
-                isAnswered = true
-                service.service.sendAnswer(id, 2)
-                repaintScreen()
-            }
-        }
-        answer4JButton.addActionListener {
-            if (!isAnswered) {
-                answer2JButton.background = Color.GRAY
-                answer3JButton.background = Color.GRAY
-                answer1JButton.background = Color.GRAY
-                isAnswered = true
-                service.service.sendAnswer(id, 3)
-                repaintScreen()
-            }
-        }
-
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
