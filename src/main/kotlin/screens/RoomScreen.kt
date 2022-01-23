@@ -14,7 +14,6 @@ import java.awt.GridLayout
 import javax.swing.*
 
 class RoomScreen(frame: JFrame, id: Int) : JPanel() {
-    var isAnswered = false
 
     init {
         val nrQuetionLabel = JLabel("Question $id", SwingConstants.CENTER)
@@ -29,25 +28,25 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
         val answer1JButton = JButton("A")
         answer1JButton.isOpaque = true
         answer1JButton.background = Color.RED
-        answer1JButton.setSize(Dimension(75, 75))
+        answer1JButton.size = Dimension(75, 75)
         answer1JButton.font = Font("Serif", Font.BOLD, 50)
 
         val answer2JButton = JButton("B")
         answer2JButton.isOpaque = true
         answer2JButton.background = Color.PINK
-        answer2JButton.setSize(Dimension(75, 75))
+        answer2JButton.size = Dimension(75, 75)
         answer2JButton.font = Font("Serif", Font.BOLD, 50)
 
         val answer3JButton = JButton("C")
         answer3JButton.isOpaque = true
         answer3JButton.background = Color.orange
-        answer3JButton.setSize(Dimension(75, 75))
+        answer3JButton.size = Dimension(75, 75)
         answer3JButton.font = Font("Serif", Font.BOLD, 50)
 
         val answer4JButton = JButton("D")
         answer4JButton.isOpaque = true
         answer4JButton.background = Color.BLUE
-        answer4JButton.setSize(Dimension(75, 75))
+        answer4JButton.size = Dimension(75, 75)
         answer4JButton.font = Font("Serif", Font.BOLD, 50)
 
         layout = null
@@ -62,14 +61,12 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
         val buttons = listOf(answer1JButton, answer2JButton, answer3JButton, answer4JButton)
         buttons.forEachIndexed { index, button ->
             button.addActionListener {
-                if (!isAnswered) {
-                    buttons.filterNot { it == button }.forEach {
-                        it.background = Color.GRAY
-                    }
-                    isAnswered = true
-                    service.service.sendAnswer(id, index)
-                    repaintScreen()
+                buttons.filterNot { it == button }.forEach {
+                    it.background = Color.GRAY
                 }
+                buttons.forEach { it.isEnabled = false }
+                service.service.sendAnswer(id, index)
+                repaintScreen()
             }
         }
 
