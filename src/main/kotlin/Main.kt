@@ -22,9 +22,9 @@ fun repaintScreen() {
 fun main(args: Array<String>) {
 
     startGUI()
-//    frame.contentPane = ConnectScreen(frame)
-    val ranking = RoomScreen(frame, 2)
-    frame.contentPane = ranking
+    frame.contentPane = ConnectScreen(frame)
+//    val ranking = RoomScreen(frame, 2)
+//    frame.contentPane = ranking
 
     repaintScreen()
 }

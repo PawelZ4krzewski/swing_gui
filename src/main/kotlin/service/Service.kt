@@ -53,6 +53,13 @@ class Service {
                                 val id = answerWithId.take(1).toInt()
                                 _messages.emit(Message.CorrectAnswer(id))
                             }
+                            readLine.startsWith("RANKING") -> {
+                                val text = readLine.drop("RANKING".length)
+                                _messages.emit(Message.Ranking(text))
+                            }
+                            readLine.startsWith("GAME_ENDED") -> {
+                                _messages.emit(Message.Ended)
+                            }
                         }
                     }
                 }

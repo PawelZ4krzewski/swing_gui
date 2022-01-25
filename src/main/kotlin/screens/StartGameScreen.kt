@@ -9,11 +9,11 @@ import service.Message
 import java.awt.Color
 import javax.swing.*
 
-class StartGameScreen(frame: JFrame): JPanel() {
+class StartGameScreen(frame: JFrame, code: String): JPanel() {
     init{
 
         //startGamePanel
-        val roomIdTextField = JLabel("Room Id")
+        val roomIdTextField = JLabel(code)
         roomIdTextField.setBounds(200, 10, 200, 40)
         val startGameButton = JButton("START")
         startGameButton.setBounds(100, 110, 200, 40)

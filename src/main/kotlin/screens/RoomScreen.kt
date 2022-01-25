@@ -79,6 +79,10 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
                         frame.navigateTo(RoomScreen(frame, id + 1))
                         coroutineScope.cancel()
                     }
+                    is Message.Ended -> {
+                        frame.navigateTo(RankingScreen(frame))
+                        coroutineScope.cancel()
+                    }
                     is Message.Error -> {
                         JOptionPane.showMessageDialog(
                             frame,

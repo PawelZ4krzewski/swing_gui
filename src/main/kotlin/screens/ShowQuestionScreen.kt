@@ -76,6 +76,10 @@ class ShowQuestionScreen(frame: JFrame, question: String, answers: List<String>)
                     is Message.CorrectAnswer -> {
                         answersTextField[it.id].foreground = Color.GREEN
                     }
+                    is Message.Ended -> {
+                        frame.navigateTo(RankingScreen(frame))
+                        coroutineScope.cancel()
+                    }
                     is Message.Error -> {
                         JOptionPane.showMessageDialog(
                             frame,

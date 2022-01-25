@@ -73,11 +73,11 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
         }
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
-        val job = coroutineScope.launch {
+        coroutineScope.launch {
             service.service.messages.collect {
                 when (it) {
                     is Message.Created -> {
-                        frame.navigateTo(StartGameScreen(frame))
+                        frame.navigateTo(StartGameScreen(frame, it.hash))
                         coroutineScope.cancel()
                     }
                     is Message.Error -> {

@@ -1,12 +1,14 @@
 package screens
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import service.Message
 import java.awt.Font
-import javax.swing.JButton
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.SwingConstants
+import javax.swing.*
 
-class RankingScreen(onNavigate: () -> Unit) : JPanel() {
+class RankingScreen(frame: JFrame) : JPanel() {
 
     val users = mutableListOf<String>()
 
@@ -26,16 +28,6 @@ class RankingScreen(onNavigate: () -> Unit) : JPanel() {
 
 
         var i = 1
-        val usersJLabel = mutableListOf<JLabel>()
-        users.take(5).forEach{
-            usersJLabel.add(JLabel("$i. $it").apply{
-                setBounds(20, (100+25*i++), 350, 50)
-                font = Font("Serif", Font.BOLD, 25)
-                this@RankingScreen.add(this)
-            })
-
-
-        }
 
         val endGame = JButton("Zakoncz").apply{
             setBounds(100, 500, 200, 50)
@@ -48,7 +40,29 @@ class RankingScreen(onNavigate: () -> Unit) : JPanel() {
         add(endGame)
 
         endGame.addActionListener {
-            onNavigate()
+        }
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            service.service.messages.collect {
+                println("Ranking screen $it")
+                when (it) {
+                    is Message.Ranking -> {
+                        JLabel("#$i. $it").apply{
+                            setBounds(20, (100+25*i++), 350, 50)
+                            font = Font("Serif", Font.BOLD, 25)
+                            this@RankingScreen.add(this)
+                            i++
+                        }
+                    }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                        )
+                    }
+                }
+            }
         }
     }
 
