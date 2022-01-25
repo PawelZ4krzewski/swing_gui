@@ -14,25 +14,30 @@ class HubScreen(frame: JFrame) : JPanel() {
 
         val roomIdTextField = JTextField("Room Id")
         roomIdTextField.setBounds(40, 10, 200, 40)
+        val nameTextField = JTextField("Nickname")
+        nameTextField.setBounds(40, 60, 200, 40)
         val connectToRoomButton = JButton("Connect to room")
-        connectToRoomButton.setBounds(40, 60, 200, 40)
+        connectToRoomButton.setBounds(40, 110, 200, 40)
         val createRoomButton = JButton("Create Room")
-        createRoomButton.setBounds(40, 110, 200, 40)
+        createRoomButton.setBounds(40, 200, 200, 40)
 
         //Hub Panel
         layout = null
         background = Color.BLUE
         add(roomIdTextField)
+        add(nameTextField)
         add(connectToRoomButton)
         add(createRoomButton)
 
-
-        createRoomButton.addActionListener {
-            frame.navigateTo(CreateRoomScreen(frame))
-        }
-
         connectToRoomButton.addActionListener {
-            service.service.joinRoom(roomIdTextField.text, "NICK")
+            if (nameTextField.text.length <= 1) {
+                JOptionPane.showMessageDialog(
+                    frame,
+                    "Twój nick jest za krótki!"
+                )
+                return@addActionListener
+            }
+            service.service.joinRoom(roomIdTextField.text, nameTextField.text)
         }
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -42,6 +47,7 @@ class HubScreen(frame: JFrame) : JPanel() {
                 when (it) {
                     is Message.Joined -> {
                         frame.navigateTo(WaitGameScreen(frame))
+                        coroutineScope.cancel()
                     }
                     is Message.Error -> {
                         JOptionPane.showMessageDialog(
@@ -51,6 +57,10 @@ class HubScreen(frame: JFrame) : JPanel() {
                     }
                 }
             }
+        }
+        createRoomButton.addActionListener {
+            frame.navigateTo(CreateRoomScreen(frame))
+            coroutineScope.cancel()
         }
     }
 }

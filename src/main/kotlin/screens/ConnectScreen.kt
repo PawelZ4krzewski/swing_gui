@@ -55,7 +55,7 @@ class ConnectScreen(frame: JFrame) : JPanel() {
         repaintScreen()
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
-        val job = coroutineScope.launch {
+        coroutineScope.launch {
             service.service.messages.collect {
                 when (it) {
                     is Message.Connected -> {
