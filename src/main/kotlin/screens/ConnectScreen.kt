@@ -42,7 +42,7 @@ class ConnectScreen(frame: JFrame) : JPanel() {
 
         connectButton.addActionListener {
             val port = portTextField.text.toIntOrNull()
-            if (port != null ) {
+            if (port != null) {
                 service.service.connectTo(adresTextField.text, portTextField.text.toInt())
             } else {
                 JOptionPane.showMessageDialog(
@@ -62,10 +62,10 @@ class ConnectScreen(frame: JFrame) : JPanel() {
                         frame.navigateTo(HubScreen(frame))
                         coroutineScope.cancel()
                     }
-                    is Message.Error -> {
+                    is Message.Disconnected, is Message.Error -> {
                         JOptionPane.showMessageDialog(
                             frame,
-                            "<html>Could not connected! Error message: ${it.exception.localizedMessage}<html>"
+                            "<html>Could not connect<html>"
                         )
                     }
                 }

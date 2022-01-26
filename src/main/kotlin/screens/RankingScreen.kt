@@ -2,7 +2,6 @@ package screens
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import service.Message
 import java.awt.Font
@@ -54,12 +53,6 @@ class RankingScreen(frame: JFrame) : JPanel() {
                             this@RankingScreen.add(this)
                             i++
                         }
-                    }
-                    is Message.Error -> {
-                        JOptionPane.showMessageDialog(
-                            frame,
-                            "<html>Error message: ${it.exception.localizedMessage}<html>"
-                        )
                     }
                 }
             }

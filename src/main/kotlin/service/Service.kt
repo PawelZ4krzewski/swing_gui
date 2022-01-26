@@ -2,6 +2,7 @@ package service
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
@@ -14,7 +15,7 @@ val service = Service()
 
 class Service {
     private var socket: Socket? = null
-    val _messages = MutableSharedFlow<Message>()
+    private val _messages = MutableSharedFlow<Message>()
     val messages = _messages.asSharedFlow()
 
     fun connectTo(ip: String, port: Int) {
@@ -27,9 +28,14 @@ class Service {
                 }
                 while (true) {
                     if (inStream != null) {
-                        val readLine = inStream.readLine()
+                        val readLine: String? = inStream.readLine()
                         println(readLine)
                         when {
+                            readLine == null -> {
+                                _messages.emit(Message.Disconnected)
+                                this.cancel()
+                                break
+                            }
                             readLine.startsWith("CREATED ") -> {
                                 _messages.emit(Message.Created(readLine.drop("CREATED ".length)))
                             }
@@ -66,7 +72,7 @@ class Service {
             } catch (e: UnknownHostException) {
                 _messages.emit(Message.Error(e, "Błędny port i/lub adres ip"))
             } catch (e: IOException) {
-                _messages.emit(Message.Error(e, "Sprawdź swoje połączenie"))
+                _messages.emit(Message.Disconnected)
             }
         }
     }
@@ -81,7 +87,7 @@ class Service {
         try {
             socket?.getOutputStream()?.write(message.length.toByteArray() + message.toByteArray())
         } catch (e: IOException) {
-            _messages.tryEmit(Message.Error(e, "Sprawdź swoje połączenie"))
+            _messages.tryEmit(Message.Disconnected)
         }
     }
 

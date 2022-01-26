@@ -3,6 +3,7 @@ package service
 import java.lang.Exception
 
 sealed class Message {
+    object Disconnected: Message()
     data class Error(val exception: Exception, val message: String): Message()
     object Connected : Message()
     object Started : Message()

@@ -1,4 +1,9 @@
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import screens.*
+import service.Message
 import java.awt.*
 import javax.swing.*
 
@@ -19,12 +24,9 @@ fun repaintScreen() {
     frame.repaint()
 }
 
-fun main(args: Array<String>) {
+fun main() {
 
     startGUI()
     frame.contentPane = ConnectScreen(frame)
-//    val ranking = RoomScreen(frame, 2)
-//    frame.contentPane = ranking
-
     repaintScreen()
 }

@@ -29,11 +29,13 @@ class WaitGameScreen(frame: JFrame) : JPanel() {
                         frame.navigateTo(RoomScreen(frame, 0))
                         coroutineScope.cancel()
                     }
-                    is Message.Error -> {
+                    is Message.Disconnected, is Message.Error -> {
                         JOptionPane.showMessageDialog(
                             frame,
-                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                            "<html>You've been disconnected<html>"
                         )
+                        frame.navigateTo(ConnectScreen(frame))
+                        coroutineScope.cancel()
                     }
                 }
             }

@@ -80,11 +80,13 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
                         frame.navigateTo(StartGameScreen(frame, it.hash))
                         coroutineScope.cancel()
                     }
-                    is Message.Error -> {
+                    is Message.Disconnected, is Message.Error -> {
                         JOptionPane.showMessageDialog(
                             frame,
-                            "<html>Error message: ${it.exception.localizedMessage}<html>"
+                            "<html>You've been disconnected<html>"
                         )
+                        frame.navigateTo(ConnectScreen(frame))
+                        coroutineScope.cancel()
                     }
                 }
             }
