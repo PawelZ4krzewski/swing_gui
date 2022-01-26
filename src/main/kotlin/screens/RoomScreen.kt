@@ -14,7 +14,7 @@ import java.awt.GridLayout
 import javax.swing.*
 
 class RoomScreen(frame: JFrame, id: Int) : JPanel() {
-
+    var selected = -1
     init {
         val nrQuetionLabel = JLabel("Question $id", SwingConstants.CENTER)
         nrQuetionLabel.setBounds(50, 0, 300, 50)
@@ -27,7 +27,7 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
 
         val answer1JButton = JButton("A")
         answer1JButton.isOpaque = true
-        answer1JButton.background = Color.RED
+        answer1JButton.background = Color.CYAN
         answer1JButton.size = Dimension(75, 75)
         answer1JButton.font = Font("Serif", Font.BOLD, 50)
 
@@ -61,6 +61,7 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
         val buttons = listOf(answer1JButton, answer2JButton, answer3JButton, answer4JButton)
         buttons.forEachIndexed { index, button ->
             button.addActionListener {
+                selected = index
                 buttons.filterNot { it == button }.forEach {
                     it.background = Color.GRAY
                 }
@@ -78,6 +79,18 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
                     is Message.Question -> {
                         frame.navigateTo(RoomScreen(frame, id + 1))
                         coroutineScope.cancel()
+                    }
+                    is Message.CorrectAnswer -> {
+                        buttons.forEach { it.isEnabled = false }
+                        buttons.forEach {
+                            it.background = Color.GRAY
+                        }
+                        if (selected == it.id) {
+                            buttons[selected].background = Color.GREEN
+                        } else {
+                            buttons[it.id].background = Color.GREEN
+                            buttons[selected].background = Color.RED
+                        }
                     }
                     is Message.Ended -> {
                         frame.navigateTo(RankingScreen(frame))
