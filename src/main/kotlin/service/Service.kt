@@ -72,6 +72,9 @@ class Service {
                             readLine.startsWith("GAME_ENDED") -> {
                                 _messages.emit(Message.Ended)
                             }
+                            readLine.startsWith("HOST_DISCONNECTED") -> {
+                                _messages.emit(Message.HostDisconnected)
+                            }
                         }
                     }
                 }

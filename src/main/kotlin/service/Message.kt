@@ -7,6 +7,7 @@ sealed class Message {
     data class Error(val exception: Exception, val message: String): Message()
     object Connected : Message()
     object Joined : Message()
+    object HostDisconnected : Message()
     object Ended : Message()
     data class Created(val hash: String) : Message()
     data class Question(val question: String) : Message()

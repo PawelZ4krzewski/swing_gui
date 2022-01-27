@@ -29,6 +29,14 @@ class WaitGameScreen(frame: JFrame, hash: String) : JPanel() {
                         frame.navigateTo(RoomScreen(frame, 0))
                         coroutineScope.cancel()
                     }
+                    is Message.HostDisconnected -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Host has disconnected<html>"
+                        )
+                        frame.navigateTo(HubScreen(frame))
+                        coroutineScope.cancel()
+                    }
                     is Message.Disconnected, is Message.Error -> {
                         JOptionPane.showMessageDialog(
                             frame,

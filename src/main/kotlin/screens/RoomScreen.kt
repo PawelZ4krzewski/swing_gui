@@ -98,6 +98,14 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
                             }
                         }
                     }
+                    is Message.HostDisconnected -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>Host has disconnected<html>"
+                        )
+                        frame.navigateTo(HubScreen(frame))
+                        coroutineScope.cancel()
+                    }
                     is Message.Ended -> {
                         frame.navigateTo(RankingScreen(frame))
                         coroutineScope.cancel()
