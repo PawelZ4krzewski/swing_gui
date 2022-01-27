@@ -37,7 +37,7 @@ class RankingScreen(frame: JFrame) : JPanel() {
                 playersTexts.forEach(this@RankingScreen::remove)
                 playersTexts = listOf()
                 it.forEachIndexed { i, s ->
-                    playersTexts = playersTexts + JLabel("#$i. $s").apply {
+                    playersTexts = playersTexts + JLabel("#${i + 1}. $s").apply {
                         setBounds(20, (100 + 25 * i), 350, 50)
                         font = Font("Serif", Font.BOLD, 25)
                         this@RankingScreen.add(this)
