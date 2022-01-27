@@ -17,6 +17,13 @@ class Service {
     private var socket: Socket? = null
     private val _messages = MutableSharedFlow<Message>()
     val messages = _messages.asSharedFlow()
+    private val ended = messages.filter { it is Message.Ended }
+    val ranking = ended.flatMapLatest {
+        messages.filter { it is Message.Ranking }
+            .scan(listOf<String>()) { acc, msg ->
+                acc + (msg as Message.Ranking).name
+            }
+    }.shareIn(CoroutineScope(Dispatchers.Main), SharingStarted.Eagerly, 1)
 
     fun connectTo(ip: String, port: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -39,9 +46,6 @@ class Service {
                             readLine.startsWith("CREATED ") -> {
                                 _messages.emit(Message.Created(readLine.drop("CREATED ".length)))
                             }
-                            readLine.startsWith("STARTED") -> {
-                                _messages.emit(Message.Started)
-                            }
                             readLine.startsWith("JOINED") -> {
                                 _messages.emit(Message.Joined)
                             }
@@ -60,8 +64,10 @@ class Service {
                                 _messages.emit(Message.CorrectAnswer(id))
                             }
                             readLine.startsWith("RANKING") -> {
+                                println("ranking :OOO")
                                 val text = readLine.drop("RANKING".length)
                                 _messages.emit(Message.Ranking(text))
+                                println("ranking emitted")
                             }
                             readLine.startsWith("GAME_ENDED") -> {
                                 _messages.emit(Message.Ended)

@@ -85,11 +85,17 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
                         buttons.forEach {
                             it.background = Color.GRAY
                         }
-                        if (selected == it.id) {
-                            buttons[selected].background = Color.GREEN
-                        } else {
-                            buttons[it.id].background = Color.GREEN
-                            buttons[selected].background = Color.RED
+                        when (selected) {
+                            it.id -> {
+                                buttons[selected].background = Color.GREEN
+                            }
+                            -1 -> {
+                                buttons[it.id].background = Color.GREEN
+                            }
+                            else -> {
+                                buttons[it.id].background = Color.GREEN
+                                buttons[selected].background = Color.RED
+                            }
                         }
                     }
                     is Message.Ended -> {

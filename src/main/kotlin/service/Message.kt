@@ -6,7 +6,6 @@ sealed class Message {
     object Disconnected: Message()
     data class Error(val exception: Exception, val message: String): Message()
     object Connected : Message()
-    object Started : Message()
     object Joined : Message()
     object Ended : Message()
     data class Created(val hash: String) : Message()

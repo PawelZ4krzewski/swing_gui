@@ -9,11 +9,11 @@ import service.Message
 import java.awt.Color
 import javax.swing.*
 
-class WaitGameScreen(frame: JFrame) : JPanel() {
+class WaitGameScreen(frame: JFrame, hash: String) : JPanel() {
     init {
 
         //startGamePanel
-        val roomIdTextField = JLabel("Room Id")
+        val roomIdTextField = JLabel(hash)
         roomIdTextField.setBounds(200, 10, 200, 40)
 
         //Hub Panel

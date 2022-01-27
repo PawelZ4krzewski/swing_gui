@@ -46,11 +46,7 @@ class HubScreen(frame: JFrame) : JPanel() {
                 println("Start game screen $it")
                 when (it) {
                     is Message.Joined -> {
-                        frame.navigateTo(WaitGameScreen(frame))
-                        coroutineScope.cancel()
-                    }
-                    is Message.Connected -> {
-                        frame.navigateTo(HubScreen(frame))
+                        frame.navigateTo(WaitGameScreen(frame, roomIdTextField.text))
                         coroutineScope.cancel()
                     }
                     is Message.Disconnected, is Message.Error -> {
