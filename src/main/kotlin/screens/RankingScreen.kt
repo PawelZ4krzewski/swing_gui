@@ -2,6 +2,7 @@ package screens
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import navigateTo
 import repaintScreen
@@ -31,6 +32,20 @@ class RankingScreen(frame: JFrame) : JPanel() {
         var playersTexts = listOf<JLabel>()
 
         val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            service.service.messages.collect {
+                when (it) {
+                    is Message.Disconnected -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>You've been disconnected<html>"
+                        )
+                        frame.navigateTo(ConnectScreen(frame))
+                        coroutineScope.cancel()
+                    }
+                }
+            }
+        }
         coroutineScope.launch {
             service.service.ranking.collect {
                 println("Ranking screen $it")

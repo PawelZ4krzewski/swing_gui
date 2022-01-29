@@ -33,7 +33,14 @@ class HubScreen(frame: JFrame) : JPanel() {
             if (nameTextField.text.length <= 1) {
                 JOptionPane.showMessageDialog(
                     frame,
-                    "Twój nick jest za krótki!"
+                    "Your nickname is too short"
+                )
+                return@addActionListener
+            }
+            if (roomIdTextField.text.length != 6) {
+                JOptionPane.showMessageDialog(
+                    frame,
+                    "Wrong code"
                 )
                 return@addActionListener
             }
