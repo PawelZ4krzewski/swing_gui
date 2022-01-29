@@ -12,6 +12,7 @@ import javax.swing.*
 
 class CreateRoomScreen(frame: JFrame) : JPanel() {
     val questions = mutableListOf<Question>()
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     init {
         val roomIdLabel = JLabel("IDROOM", SwingConstants.CENTER)
@@ -39,8 +40,17 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
         val endCreateRoom = JButton("Zakoncz")
         endCreateRoom.setBounds(100, 500, 200, 50)
 
+        val backButton = JButton("Cofnij").apply {
+            setBounds(0, 0, 100, 40)
+            addActionListener {
+                coroutineScope.cancel()
+                frame.navigateTo(HubScreen(frame))
+            }
+        }
+
         layout = null
         background = Color.YELLOW
+        add(backButton)
         add(roomIdLabel)
         add(questionJTextField)
         add(answer1JTextField)
@@ -80,6 +90,7 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
                     frame,
                     "<html>You need to add at least one question<html>"
                 )
+                return@addActionListener
             }
             service.service.createRoom()
             questions.forEach {
@@ -87,7 +98,6 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
             }
         }
 
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
         coroutineScope.launch {
             service.service.messages.collect {
                 when (it) {
