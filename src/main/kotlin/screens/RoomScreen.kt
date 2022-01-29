@@ -110,7 +110,7 @@ class RoomScreen(frame: JFrame, id: Int) : JPanel() {
                         frame.navigateTo(RankingScreen(frame))
                         coroutineScope.cancel()
                     }
-                    is Message.Disconnected, is Message.Error -> {
+                    is Message.Disconnected -> {
                         JOptionPane.showMessageDialog(
                             frame,
                             "<html>You've been disconnected<html>"

@@ -4,7 +4,7 @@ import java.lang.Exception
 
 sealed class Message {
     object Disconnected: Message()
-    data class Error(val exception: Exception, val message: String): Message()
+    data class Error(val exception: Exception?, val message: String): Message()
     object Connected : Message()
     object Joined : Message()
     object HostDisconnected : Message()

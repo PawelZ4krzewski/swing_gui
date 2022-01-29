@@ -1,9 +1,6 @@
 package screens
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import navigateTo
 import service.Message
 import java.awt.Color
@@ -11,11 +8,8 @@ import java.awt.Font
 import javax.swing.*
 
 class ShowQuestionScreen(frame: JFrame, question: String, answers: List<String>) : JPanel() {
-
+    private val length = 20
     init {
-        val roomIdSQLabel = JLabel("IDROOM", SwingConstants.CENTER)
-        roomIdSQLabel.setBounds(50, 0, 300, 50)
-        roomIdSQLabel.font = Font("Serif", Font.BOLD, 25)
 
         val questionShowJTextField = JLabel("Question: $question")
         questionShowJTextField.setBounds(20, 75, 350, 50)
@@ -37,13 +31,12 @@ class ShowQuestionScreen(frame: JFrame, question: String, answers: List<String>)
         answer4ShowJTextField.setBounds(20, 275, 350, 50)
         answer4ShowJTextField.font = Font("Serif", Font.BOLD, 20)
 
-        val timerJTextField = JLabel("30")
+        val timerJTextField = JLabel("$length")
         timerJTextField.setBounds(175, 400, 350, 50)
         timerJTextField.font = Font("Serif", Font.BOLD, 40)
 
         val answersTextField = listOf(answer1ShowJTextField, answer2ShowJTextField, answer3ShowJTextField, answer4ShowJTextField)
         layout = null
-        add(roomIdSQLabel)
         add(questionShowJTextField)
         add(answer1ShowJTextField)
         add(answer2ShowJTextField)
@@ -55,6 +48,12 @@ class ShowQuestionScreen(frame: JFrame, question: String, answers: List<String>)
         val answersTemp = mutableListOf<String>()
         var questionTemp = ""
         val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            repeat(length) {
+                delay(1000)
+                timerJTextField.text = (length - 1 - it).toString()
+            }
+        }
         coroutineScope.launch {
             service.service.messages.collect {
                 println("Show question screen $it")
@@ -80,7 +79,7 @@ class ShowQuestionScreen(frame: JFrame, question: String, answers: List<String>)
                         frame.navigateTo(RankingScreen(frame))
                         coroutineScope.cancel()
                     }
-                    is Message.Disconnected, is Message.Error -> {
+                    is Message.Disconnected -> {
                         JOptionPane.showMessageDialog(
                             frame,
                             "<html>You've been disconnected<html>"
