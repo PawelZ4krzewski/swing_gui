@@ -58,6 +58,12 @@ class StartGameScreen(frame: JFrame, code: String): JPanel() {
                         frame.navigateTo(ConnectScreen(frame))
                         coroutineScope.cancel()
                     }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>${it.message}<html>"
+                        )
+                    }
                 }
             }
         }

@@ -50,13 +50,23 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
         add(addQuestionButton)
         add(endCreateRoom)
 
+        val answersTextFields = listOf(answer1JTextField, answer2JTextField, answer3JTextField, answer4JTextField)
         addQuestionButton.addActionListener {
+            val textFields = answersTextFields + questionJTextField
+            if (textFields.any { it.text.isEmpty() }) {
+                JOptionPane.showMessageDialog(
+                    frame,
+                    "<html>You can't leave blank fields.<html>"
+                )
+                return@addActionListener
+            }
             questions.add(
                 Question(
                     questionJTextField.text,
-                    listOf(answer1JTextField, answer2JTextField, answer3JTextField, answer4JTextField).map { it.text },
+                    answersTextFields.map { it.text },
                 )
             )
+
             questionJTextField.text = "Question"
             answer1JTextField.text = "Correct Answer"
             answer2JTextField.text = "Answer 2"
@@ -65,8 +75,13 @@ class CreateRoomScreen(frame: JFrame) : JPanel() {
         }
 
         endCreateRoom.addActionListener {
-            print(questions)
-            service.service.createRoom("PAWEL CZEMU NIE ZROBIELS TEXT FIELDA NA TO")
+            if (questions.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                    frame,
+                    "<html>You need to add at least one question<html>"
+                )
+            }
+            service.service.createRoom()
             questions.forEach {
                 service.service.addQuestion(it.question, it.answers[0], it.answers[1], it.answers[2], it.answers[3])
             }

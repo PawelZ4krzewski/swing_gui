@@ -75,6 +75,10 @@ class Service {
                             readLine.startsWith("HOST_DISCONNECTED") -> {
                                 _messages.emit(Message.HostDisconnected)
                             }
+                            readLine.startsWith("ERROR") -> {
+                                val text = readLine.drop("ERROR ".length)
+                                _messages.emit(Message.Error(null, text))
+                            }
                         }
                     }
                 }
@@ -109,8 +113,8 @@ class Service {
         sendMessage("NEW_QUESTION $paddedQuestionSize$question$paddedAnswerOneSize$answerOne$paddedAnswerTwoSize$answerTwo$paddedAnswerThreeSize$answerThree$paddedAnswerFourSize$answerFour")
     }
 
-    fun createRoom(nickname: String) {
-        sendMessage("CREATE_ROOM $nickname")
+    fun createRoom() {
+        sendMessage("CREATE_ROOM")
     }
 
     fun joinRoom(hash: String, nickname: String) {

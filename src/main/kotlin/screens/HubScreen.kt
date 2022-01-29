@@ -49,6 +49,12 @@ class HubScreen(frame: JFrame) : JPanel() {
                         frame.navigateTo(WaitGameScreen(frame, roomIdTextField.text))
                         coroutineScope.cancel()
                     }
+                    is Message.Error -> {
+                        JOptionPane.showMessageDialog(
+                            frame,
+                            "<html>${it.message}<html>"
+                        )
+                    }
                     is Message.Disconnected -> {
                         JOptionPane.showMessageDialog(
                             frame,
